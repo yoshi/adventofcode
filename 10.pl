@@ -18,6 +18,8 @@ sub las {
 	my( $start_str ) = @_;
 
 	my $iter_str = "";
+#	vec($iter_str, length($start_str) * 1.5, 8) = 0;
+#	$iter_str = "";
 
 	my( @scoreboard );
 
@@ -45,4 +47,3 @@ sub las {
 
 	return $iter_str;
 }
-
