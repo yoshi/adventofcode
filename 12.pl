@@ -5,6 +5,7 @@ use JSON qw( from_json decode_json );
 use Scalar::Util qw( looks_like_number );
 
 my $input;
+my $skip_red = 0;
 
 while( <> ) {
 	chomp;
@@ -33,16 +34,17 @@ sub aw_sum {
 	my $sum = 0;
 	my $data = from_json $json;
 
-	Dumper( $data );
-
 	return get_sum( $data );
 }
 
 sub red_sum {
 	my( $json ) = @_;
 	my $sum = 0;
+	my $data = from_json $json;
 
-	return $sum;
+	$skip_red = 1;
+
+	return get_sum( $data );
 }
 
 sub get_sum {
@@ -50,24 +52,20 @@ sub get_sum {
 	my( $sum ) = 0;
 
 	if( ref($thing) eq "HASH" ) {
-		print qq(this is a hash\n);
-		foreach $key ( keys %{$thing} ) {
-			print qq(following $key\n);
-			$sum += get_sum( \%{$thing}{$key} );
+		if( ! ( $skip_red && grep { $_ eq "red" } values %{$thing} ) ) {
+			foreach $key ( keys %{$thing} ) {
+				$sum += get_sum( $thing->{$key} );
+			}
 		}
 	}
 	if( ref($thing) eq "ARRAY" ) {
-		print qq(this is a array\n);
-		foreach $item ( \@{$thing} ) {
+		foreach $item ( @{$thing} ) {
 			$sum += get_sum( $item );
 		}
 	}
 	if( ( !ref( $thing ) || ref($thing) eq "SCALAR" ) && looks_like_number( $thing ) ) {
-		print qq(this is a scalar\n);
 		$sum = $thing;
 	}
-
-	print qq(gathered $sum\n);
 
 	return $sum
 }

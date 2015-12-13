@@ -16,3 +16,4 @@ Day | Part 1 | Part 2
 09|Done|Done
 10|Done|Done
 11|Done|Done
+12|Done|Done
