@@ -26,7 +26,6 @@ class Reindeer {
 				$self->_set_rest_ticks( $self->rest_duration );
 				$self->_set_is_resting( true );
 				$self->_set_is_flying( false );
-				printf( "%s is now resting\n", $self->name );
 			}
 		} else {
 			$self->_set_rest_ticks( $self->rest_ticks - 1 );
@@ -34,7 +33,6 @@ class Reindeer {
 				$self->_set_fly_ticks( $self->fly_duration );
 				$self->_set_is_resting( false );
 				$self->_set_is_flying( true );
-				printf( "%s is now flying\n", $self->name );
 			}
 		}
 	}
@@ -48,7 +46,7 @@ class Reindeer {
 	}
 
 	method give_point {
-		$self->_set_points( $self->get_points + 1 );
+		$self->_set_points( $self->points + 1 );
 	}
 }
 
@@ -71,8 +69,18 @@ while( <> ) {
 }
 
 for( my $i = 0; $i < 2503; $i += 1 ) {
+	my $max_distance = 0;
 	foreach my $reindeer (@reindeer_crew ) {
 		$reindeer->tick;
+		if( $reindeer->distance > $max_distance ) {
+			$max_distance = $reindeer->distance;
+		}
+	}
+
+	foreach my $reindeer ( @reindeer_crew ) {
+		if( $reindeer->distance == $max_distance ) {
+			$reindeer->give_point;
+		}
 	}
 }
 
