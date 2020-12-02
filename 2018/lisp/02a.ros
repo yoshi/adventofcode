@@ -1,0 +1,32 @@
+#!/bin/sh
+#|-*- mode:lisp -*-|#
+#|
+exec ros -Q -- $0 "$@"
+|#
+(progn ;;init forms
+  (ros:ensure-asdf)
+  ;;#+quicklisp(ql:quickload '() :silent t)
+  )
+
+(defpackage :ros.script.02a.3752937623
+  (:use :cl))
+(in-package :ros.script.02a.3752937623)
+
+(defun freqp (str n)
+  (loop for i from 0 to (- (length str) 1)
+		do (when (eq n (count (elt str i) str))
+			 (return t))))
+
+(defun main (&rest argv)
+  (declare (ignorable argv))
+  ;; read ids from file
+  ;; foreach id, detect two counts and three counts
+  ;; increment the twos and threes as appropriate
+  ;; multiply those counts together and produce the checksum
+  (loop for line = (read-line nil nil :eof)
+		until (eq line :eof)
+		counting (freqp line 2) into twos
+		counting (freqp line 3) into threes
+		finally (print (* twos threes))))
+
+;;; vim: set ft=lisp lisp:

@@ -1,0 +1,5 @@
+With the assistance of my lovely wife, I've chosen to use lisp for AOC 2018.
+
+Here's some setup instructions:
+
+brew install sbcl roswell

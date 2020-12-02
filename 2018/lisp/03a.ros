@@ -1,0 +1,80 @@
+#!/bin/sh
+#|-*- mode:lisp -*-|#
+#|
+exec ros -Q -- $0 "$@"
+|#
+(progn ;;init forms
+  (ros:ensure-asdf)
+  ;;#+quicklisp(ql:quickload '() :silent t)
+  )
+
+(defpackage :ros.script.03a.3753064663
+  (:use :cl))
+(in-package :ros.script.03a.3753064663)
+
+(defun parse-claim-string (str)
+  (let ((pos 1))
+	(setf ret (parse-integer str :start pos :junk-allowed t))
+	(format t "~A ~A~%" str ret)))
+
+;; the problem
+
+;; the fabric is at least 1000 inches on each side.
+;; format: #claim-id @ x,y: wxh
+;; calculate number of squares that contain two or more claims
+
+;; exercise
+
+;; looping
+;; string parsing
+
+(defun main (&rest argv)
+  (declare (ignorable argv))
+  (let ((fabric (make-array '(1500 1500) :adjustable t)))
+	(setf fabric nil)
+	;; obtain claim-id, x, y, w, h
+	;; paint claim on fabric
+	;; count and output inches
+	(loop for line = (read-line nil nil :eof)
+		  until (eq line :eof)
+		  do (parse-claim-string line))))
+
+(
+ map for each character in list, substitute it with a space
+ then read all of the numbers in via the loop.
+ what a pain in the ass.
+
+(reduce (lambda (x) (substitute x " "))  :initial-value )
+(loop for c in '(#\# #\@ #\, #\: #\x)
+	  do (substitute c " " "#123 @ 4,5: 6x7"))
+(remove #\# ())
+
+
+(let ((line "#123 @ 4,5: 6x7") uh)
+  (multiple-value-bind (claim-id caret) (parse-integer line :start 1 :junk-allowed t)
+	(multiple-value-bind (x caret) (parse-integer line :start (+ caret 3) :junk-allowed t)
+	  (multiple-value-bind (y caret) (parse-integer line :start (+ caret 1) :junk-allowed t)
+		(multiple-value-bind (w caret) (parse-integer line :start (+ caret 1) :junk-allowed t)
+		  (multiple-value-bind (h caret) (parse-integer line :start (+ caret 1) :junk-allowed t)
+			(setf uh "#~A @ ~A,~A rest ~A")
+			(format t uh '(claim-id x y w h caret))))))))
+
+ (with-input-from-string (in (substitute #\@ (substitute))(remove #\# "#123 @ 4,5: 6x7")
+   (loop for x = (read in nil nil) while x collect x))
+
+(let ((line "#123 @ 4,5: 6x7")
+	  claim-id
+	  x
+	  y
+	  w
+	  h
+	  caret)
+  (multiple-value-bind (claim-id caret) (parse-integer line :start 1 :junk-allowed t))
+  (setf x (parse-integer line :start x-offset :junk-allowed t))
+  (setf y (parse-integer line :start y-offset :junk-allowed t))
+  (setf w (parse-integer line :start w-offset :junk-allowed t))
+  (setf h (parse-integer line :start h-offset :junk-allowed t))
+  (format t "#~A @ ~A,~A: ~Ax~A" claim-id x y w h))
+)
+ ((loop ))
+;;; vim: set ft=lisp lisp:

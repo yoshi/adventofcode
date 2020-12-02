@@ -1,0 +1,39 @@
+#!/bin/sh
+#|-*- mode:lisp -*-|#
+#|
+exec ros -Q -- $0 "$@"
+|#
+(progn ;;init forms
+  (ros:ensure-asdf)
+  ;;#+quicklisp(ql:quickload '() :silent t)
+  )
+
+(defpackage :ros.script.01b.3752888852
+  (:use :cl))
+(in-package :ros.script.01b.3752888852)
+
+(defun main (&rest argv)
+  (declare (ignorable argv))
+  ;; read changes from file
+  (let ((changes (make-array 1 :fill-pointer 0 :adjustable t))
+		(frequencies (make-array 1 :fill-pointer 0 :adjustable t))
+		(frequency 0))
+	(loop for line = (read-line nil nil :eof)
+		  until (eq line :eof)
+		  as num = (parse-integer line :junk-allowed t)
+		  while line do
+			(when num
+			  (vector-push-extend num changes)))
+	;; iterate through changes
+	;; detect and record frequency frequencies
+	;; output when the first frequency is detected twice
+	(let (change (i 0))
+	  (loop
+		(when (eq 2 (count frequency frequencies))
+		  (return))
+		(setf change (elt changes i))
+		(setf frequency (+ frequency change))
+		(vector-push-extend frequency frequencies)
+		(setf i (mod (+ i 1) (length changes)))))
+	(print frequency)))
+;;; vim: set ft=lisp lisp:

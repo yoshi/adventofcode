@@ -1,0 +1,28 @@
+#!/bin/sh
+#|-*- mode:lisp -*-|#
+#|
+exec ros -Q -- $0 "$@"
+|#
+(progn ;;init forms
+  (ros:ensure-asdf)
+  ;;#+quicklisp(ql:quickload '() :silent t)
+  )
+
+(defpackage :ros.script.12a.3753637611
+  (:use :cl))
+(in-package :ros.script.12a.3753637611)
+
+(defun main (&rest argv)
+  (declare (ignorable argv))
+
+  (let ((rules (make-array 1 :fill-pointer 0 :adjustable t))
+		state)
+	(loop for line = (read-line nil nil :eof)
+		  until (eq line :eof)
+		  when (search ": " line)
+			do (setf state (string-trim "initial state: " line))
+		  when (search "=>" line)
+			do ()
+		  )
+	))
+;;; vim: set ft=lisp lisp:

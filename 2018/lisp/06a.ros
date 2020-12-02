@@ -1,0 +1,40 @@
+#!/bin/sh
+#|-*- mode:lisp -*-|#
+#|
+exec ros -Q -- $0 "$@"
+|#
+(progn ;;init forms
+  (ros:ensure-asdf)
+  ;;#+quicklisp(ql:quickload '() :silent t)
+  )
+
+(defpackage :ros.script.06a.3753458410
+  (:use :cl))
+(in-package :ros.script.06a.3753458410)
+
+;; consume coordinates
+;; create convex hull.
+;; all vertices on convex hull are not candidates
+;; draw area in grid confined by convex hull
+;; count areas for candidates
+;; boom.
+
+;; hull is an ordered list of nodes
+
+(defvar grid)
+
+(defvar coords)
+
+(defvar box)
+
+(defun in-box-p (coord))
+
+(defun parse-cord (str))
+
+(defun main (&rest argv)
+  (declare (ignorable argv))
+  (loop for line = (read-line nil nil :eof)
+	 until (eq line :eof)
+	 as coord = (parse-coord line)
+	 while line do ()))
+;;; vim: set ft=lisp lisp:

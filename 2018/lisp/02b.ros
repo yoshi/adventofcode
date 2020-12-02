@@ -1,0 +1,41 @@
+#!/bin/sh
+#|-*- mode:lisp -*-|#
+#|
+exec ros -Q -- $0 "$@"
+|#
+(progn ;;init forms
+  (ros:ensure-asdf)
+  ;;#+quicklisp(ql:quickload '() :silent t)
+  )
+
+(defpackage :ros.script.02b.3753058026
+  (:use :cl))
+(in-package :ros.script.02b.3753058026)
+
+;; ok, read in all strings into a list or something
+;; for each string, count the number of of different characters for all strings that follow.
+;; if there is only one difference between the strings to be compared, store them both
+;; compute the similar characters in the strings.
+
+(defun ndiff (a b)
+  ;; find n where n is the number of characters that are different
+  (loop for i from 0 to (- (length a) 1)
+		counting (not (eq (elt a i) (elt b i))) into n
+		finally (return n)))
+
+(defun same (a b)
+  (concatenate 'string (loop for i from 0 to (- (length a) 1)
+							 when (eq (elt a i) (elt b i)) collect (elt a i))))
+
+(defun main (&rest argv)
+  (declare (ignorable argv))
+  (let ((ids (make-array 1 :fill-pointer 0 :adjustable t)))
+	(setf ids (loop for line = (read-line nil nil :eof)
+					until (eq line :eof)
+					collect line))
+	(loop for (id . rest) on ids
+		  when rest
+			do (loop for (id2 . rest2) on rest
+					 when (eq 1 (ndiff id id2))
+					   do (format t "~a~%~a~%~a~%" id id2 (same id id2))))))
+;;; vim: set ft=lisp lisp:
