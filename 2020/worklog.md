@@ -14,7 +14,7 @@ In julia, the desire would be to use the handy dandy `match` function that takes
 
 The regular expression would thus be stated as follows (make sure that you review and re-review the delimiters in your regex /sadtrombone):
 
-`r"^(\d+)-(\d+) (\w): (\w+)$"`
+```r"^(\d+)-(\d+) (\w): (\w+)$"```
 
 
 ## Day 1 (https://adventofcode.com/2020/day/1)
@@ -27,30 +27,38 @@ The second part of the problem is to choose three numbers and to perform the sam
 
 An interesting aspect of the julia solution is that there is an opportunity to use a syntatically brief form of nested loops.  In most programming languages, the construct for this would be to do something along the lines of:
 
-`for( int i = 0; i < maxi; i++ ) {
+```
+for( int i = 0; i < maxi; i++ ) {
 	for( int j = 0; j < maxj; j++ ) {
 		for( int k = 0; k < maxk; k++ ) {
 			...
 		}
 	}
-}`
+}
+```
 
 In julia, for loops look like this:
 
-`for i = mini:maxi
+```
+for i = mini:maxi
 	...
-end`
+end
+```
 
 and while these loops can be nested as above:
 
-`for i = mini:maxi
+```
+for i = mini:maxi
 	for j = minj:maxj
 		...
 	end
-end`
+end
+```
 
 this can be shortened by collapsing the nest:
 
-`for i = mini:maxi, j = minj:maxj
+```
+for i = mini:maxi, j = minj:maxj
 	...
-end`
+end
+```
