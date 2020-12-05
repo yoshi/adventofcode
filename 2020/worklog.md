@@ -1,5 +1,27 @@
 # Advent of Code Worklog 2020
 
+## Day 5 (https://adventofcode.com/2020/day/5)
+
+Yay, binary number parsing and manipulation.  I suppose we need to regex transform the string into two parts.  The first seven contain the row and the last 3 contain the column.
+
+For reference, seat id = row * 8 + column.
+
+### Julia
+
+So, lets get the regexes going.  I don't know if julia can do multiline regexes like in perl for readability.  That will be the first thing to investigate.  If not, then ah well, I will have to take more care in the construction of the regex.  Ah, cool, looks like it accepts the same options as perl regexes, so 'x' works.
+
+For reference: https://docs.julialang.org/en/v1/manual/strings/#Regular-Expressions
+
+Lets also get comfortable with using the 'nothing' keyword as a return value.
+
+`occursin` tells you if the regex succeeds and returns a boolean value.
+
+`match` tells you if the regex succeeds and returns how it succeeded.  If it is unsuccessful, then it returns ```nothing```.
+
+Actually, it ends up that all that is needed is a regex to split out the top 7 bits and the lower 3 bits to get the data map.  After that, transforming the characters using `tr` would be appropriate in perl, but in julia, doing `replace` twice for each term worked out.  Then there's the computation of the seat number using arithmatic.
+
+For the second part, maintaining a map of the seats allowed for straight forward identification of the missing seat, which is the answer.
+
 ## Day 4 (https://adventofcode.com/2020/day/4)
 
 This problem is all about joining lines together to make records.  Part two may be about hashtables, but we will come to that.
