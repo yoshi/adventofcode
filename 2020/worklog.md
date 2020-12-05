@@ -1,5 +1,21 @@
 # Advent of Code Worklog 2020
 
+## Day 4 (https://adventofcode.com/2020/day/4)
+
+This problem is all about joining lines together to make records.  Part two may be about hashtables, but we will come to that.
+
+Valid records are those that contain 8 entries or 7 entries without 'cid'
+
+Part 2 requires semantic validation of the data associated with the data.
+
+### Julia
+
+We need to iterate over the input to split records on blank lines and the end of the data file.  So, join all lines together that are within a record and create new records when appropriate.
+
+One thing to check and to be ever vigilient about is to scrutinize boolean operators and conditions.  Another thing is to look at expected values from parses and independently validate the chain of data filtration/transformation in between phases.  All this because, I failed to both of those things when I first started the problem.  Heh.
+
+For part 2, we will need to take the passport, consume into a hashtable and perform appropriate data validations.
+
 ## Day 3 (https://adventofcode.com/2020/day/3)
 
 I think the main deal with this problem is just using mod to wrap across replicates of array indexes.  Seems straight forward enough.
