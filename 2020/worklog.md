@@ -1,5 +1,17 @@
 # Advent of Code Worklog 2020
 
+## Day 8 (https://adventofcode.com/2020/day/8)
+
+Klytus I'm bored - what plaything can you offer me today?
+
+I really do believe Max von Sydow is an amazing actor.  From Ming the Merciless to Pardot Kynes and all points in-between.
+
+The eighth day!  Oh gods, it's another assembler problem.  But maybe perhaps it is not.  Looks like an accumilator (A) needs to be maintained and we may as well use a program counter (PC) as well.
+
+### Julia
+
+Fancy or non-fancy, that is the question.  Lets go for non-fancy and see what emerges.
+
 ## Day 7 (https://adventofcode.com/2020/day/7)
 
 Ok, day 7 is about more regex stuff in conjunction with graph construction and traversal.
