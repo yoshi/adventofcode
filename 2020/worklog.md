@@ -1,5 +1,30 @@
 # Advent of Code Worklog 2020
 
+## Day 7 (https://adventofcode.com/2020/day/7)
+
+Ok, day 7 is about more regex stuff in conjunction with graph construction and traversal.
+
+While the first day is fairly straight foward if the noise is stripped away, I have the suspiciion that the noise will be necessary on part two of the problem and may be the beginning of some greater body of work in subsequent days.
+
+So, we have rules, one per line.
+
+A -> n * B, m * C, ...
+
+They look like production rules, which is familiar from previous years.
+
+For a given bag, shiny gold, how many uniquely colored bags contain it?  The answer is 4 from the sample rule set.
+
+The second part of the problem is about measuring the number of bags stored by a particular bags.  Being lazy, and using meta programming for string alteration and evaluation seems to do the trick.
+
+### Julia
+
+Further work on regexes and Meta.parse with a subsequent eval() worked well, but feels pretty darn brute force.  The answers were correct, but at what cost... AT WHAT COST??? :)
+
+## Day 6 (https://adventofcode.com/2020/day/6)
+
+Hmm I neglected to write notes for this day for some reason.  I'll come back and revisit.
+
+
 ## Day 5 (https://adventofcode.com/2020/day/5)
 
 Yay, binary number parsing and manipulation.  I suppose we need to regex transform the string into two parts.  The first seven contain the row and the last 3 contain the column.
