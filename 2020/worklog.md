@@ -1,5 +1,17 @@
 # Advent of Code Worklog 2020
 
+## Day 9 (https://adventofcode.com/2020/day/9)
+
+Yow, this one was pretty simple.  Basically, take a giant list of numbers and verify that for a floating window of 25 numbers, ensure that the number that follows that window is the sum of two terms in that window.
+
+Oh, read the fricken instructions and don't return the result of an incorrect computation.
+
+### Julia
+
+The only julia specific things that I took advantage of was the string parsing function and fiddling with ranges.
+
+On part two, I got a little more fancy and used `view` for creating a slice, `reduce` for applying a function across this slice and `sort` to sort the numbers in a list.
+
 ## Day 8 (https://adventofcode.com/2020/day/8)
 
 Klytus I'm bored - what plaything can you offer me today?
