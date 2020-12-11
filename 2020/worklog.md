@@ -1,5 +1,33 @@
 # Advent of Code Worklog 2020
 
+## Day 10 (https://adventofcode.com/2020/day/10)
+
+I think this day's problem is deceptively simple.  I think I just need to sort the numbers, compute the offsets and then multiply the counts of those offsets to get a checksum.  Not sure what's supposed to be hard about this.
+
+Well, ok, you have to be able to add elements to the beginning and end of an array.
+
+Part two is funny because there seems to be multiple ways to skin the cat.  Which is a weird statement.  Basically, there are, for an input size of 97, 96192759682482119853328425949563698712343813919172976158104477319333745612481875498805879175589072651261284189679678167647067832320000000000000000000000 combinations (I think) of those numbers, but certainly a hell of a lot less combinations for valid configurations.  So, we're left with having to iterate on valid combinations.  But hold up, n! is used to generate the number of combinations with respect to ordering.  What we need is to determine all combinations of ordered digits that can be removed while adhering to the validity rule.  So a series of 97 bits would generate all possibilities, and would have 158456325028528675187087900671 + 1 combinations.  A 97 layer binary tree could house the possibilities, but still seems like a lot of work.
+
+Perhaps a more iterative approach would be better.  Get all slots from i (being the current index) that have a difference of three or less.
+
+Ok, it is dumb how long i'm spending on this.
+
+Options:
+
+Doing that many combinations and then figuring out what is valid isn't gonna work.  We need to create valid combinations on the go.
+
+What about counting branches and joins?
+
+Or... We need a cluster finder.
+
+While a crazy amount of investigation ended up fruitless, all the logic came down to determining the cost of three subgraphs comprised of runs of 3, 4, and 5 numbers.  So the cost of a sequental run of 3 numbers is 2 (a,b,c and a,c are the variations), 4 numbers is 4 (a,b,c,d, a,b,d, a,c,d, a,d), and 5 numbers is 7 (a,b,c,d,e, a,c,d,e, a,b,d,e, a,b,e, a,b,c,e, a,c,e, a,d,e, a,e).  Take all of the sequential runs, cost them out and multiply the results and boom.  done.
+
+The biggest cluee to the solution is the first part of the problem where we were asked to find all counts of offsets.  I'm an expert at making things complicated. :)
+
+### Julia
+
+To add an element to the beginning of an array, use `pushfirst!()` and to add an element to the end, use `append!()`.
+
 ## Day 9 (https://adventofcode.com/2020/day/9)
 
 Yow, this one was pretty simple.  Basically, take a giant list of numbers and verify that for a floating window of 25 numbers, ensure that the number that follows that window is the sum of two terms in that window.
