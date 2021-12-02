@@ -7,7 +7,7 @@ Here's my done-ness to date:
 Day | Part 1 | Part 2
 ---|---|---
 01|Done|Done
-02||
+02|Done|Done
 03||
 04||
 05||
