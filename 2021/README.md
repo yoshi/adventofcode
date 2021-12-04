@@ -8,8 +8,8 @@ Day | Part 1 | Part 2
 ---|---|---
 01|Done|Done
 02|Done|Done
-03||
-04||
+03|Done|Done
+04|Done|Done
 05||
 06||
 07||
