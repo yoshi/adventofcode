@@ -10,7 +10,7 @@ Day | Part 1 | Part 2
 02|Done|Done
 03|Done|Done
 04|Done|Done
-05||
+05|Done|Done
 06||
 07||
 08||
