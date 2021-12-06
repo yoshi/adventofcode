@@ -1,6 +1,10 @@
 # Advent of Code 2021
 
-## 2021-12-05
+## Day 06
+
+Well, that was interesting.  My naive solution required all the memory and time, but using the hash solution was robust and super trivial.  Sometimes you have to bend your head to get a good approach.
+
+## Day 05
 
 Damn, doing this at night really gets me tired.  I think I will have to give up the ghost at some point and just do these in the morning.
 

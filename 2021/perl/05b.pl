@@ -4,8 +4,7 @@ use strict;
 
 chomp( my @dat = <> );
 
-my @lines;
-my @diags;
+my @coords;
 my $maxx = 0;
 my $maxy = 0;
 
@@ -20,9 +19,9 @@ foreach my $linestr (@dat) {
 	$maxy = $y2 if( $y2 > $maxy );
 	#next if( ! (($x1 == $x2) || ($y1 == $y2) ));
 	if( ($x1 == $x2) || ($y1 == $y2) ) {
-		push( @lines, &line_coords( $x1, $y1, $x2, $y2 ) );
+		push( @coords, &line_coords( $x1, $y1, $x2, $y2 ) );
 	} else {
-		push( @diags, &diag_coords( $x1, $y1, $x2, $y2 ) );
+		push( @coords, &diag_coords( $x1, $y1, $x2, $y2 ) );
 	}
 }
 
@@ -32,14 +31,8 @@ for( my $i = 0; $i <= $maxy; $i++ ) {
 	push( @matrix, [(0) x ($maxx + 1)] );
 }
 
-foreach my $line (@lines) {
+foreach my $line (@coords) {
 	foreach my $coord (@$line) {
-		$matrix[$coord->[1]][$coord->[0]]++;
-	}
-}
-
-foreach my $diag (@diags) {
-	foreach my $coord (@$diag) {
 		$matrix[$coord->[1]][$coord->[0]]++;
 	}
 }
