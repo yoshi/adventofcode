@@ -11,3 +11,7 @@ more languages as time permits.
 
 I'm super tired so I couldn't think past brute force.  I hope to
 revisit this one with a more interesting solution.
+
+## Day 03
+
+I'm getting suspicious.  This was too easy.
