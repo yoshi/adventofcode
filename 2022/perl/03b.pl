@@ -16,12 +16,13 @@ for( my $i = 0; $i < scalar( @dat ); $i += 3 ) {
 	foreach $c ( keys %one ) {
 		if( defined( $two{ $c } ) && defined( $three{ $c } ) ) {
 			#print qq(found the dup: $c\n);
-			my $priority = ord( $c ) > 96 ? ord($c) - 96 : ord($c) - 38;
+			my $cval = ord($c);
+			my $badge = $cval > 96 ? $cval - 96 : $cval - 38;
 			#print qq($c ($priority): ) . ord($c) . qq(\n);
-			$priority_sum += $priority;
+			$badge_sum += $badge;
 		}
 	}
 
 	# add priority to sum
 }
-print qq(priority_sum: $priority_sum\n);
+print qq(badge_sum: $badge_sum\n);
