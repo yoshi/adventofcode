@@ -1,4 +1,4 @@
-# adventofcode
+# Advent of Code
 
 A bunch of terrible code to fulfill the requirements of the Advent of Code (<http://adventofcode.com/>).
 
