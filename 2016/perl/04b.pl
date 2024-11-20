@@ -20,7 +20,11 @@ foreach $line ( @dat ) {
 	#print "name: $name checksum: $checksum\n";
 
 	if( &is_real( $name, $checksum ) ) {
-		$count += $sector_id
+		$count += $sector_id;
+
+		my $enc = join( "-", @parts );
+		my $dec = &decrypt( $enc, $sector_id );
+		print "sector: $sector_id enc: $enc dec: $dec\n";
 	}
 }
 
@@ -56,4 +60,18 @@ sub is_real {
 	} else {
 		return 0;
 	}
+}
+
+sub decrypt {
+	my( $encrypted_name, $sector_id ) = @_;
+	my( $decrypted_name );
+
+	foreach my $c ( split(//, $encrypted_name) ) {
+		if( $c ne "-" ) {
+			$c = chr( (ord($c) - 97 + $sector_id) % 26 + 97 );
+		}
+		$decrypted_name .= $c;
+	}
+
+	return $decrypted_name;
 }
