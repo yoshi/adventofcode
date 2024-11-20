@@ -36,7 +36,7 @@ foreach my $col (@cols) {
 		$freqs{$tokens{$token}} .= $token;
 	}
 
-	foreach my $freq (sort {$b cmp $a} keys %freqs) {
+	foreach my $freq (sort keys %freqs) {
 		$message .= $freqs{$freq};
 		last;
 	}
