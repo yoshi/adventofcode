@@ -2,12 +2,17 @@
 
 A bunch of terrible code to fulfill the requirements of the Advent of Code (http://adventofcode.com/).
 
+## Thoughts
+
+### 2024-12-01T05:06-0800
+Getting started with perl because it is late at night and I couldn't sleep.  If I get fancy, I might do Zig/Go/CL/Gleam as well.
+
 ## Progress
 Here's my done-ness to date:
 
 | Day | Part 1 | Part 2 |
 |-----|--------|--------|
-| 01  |        |        |
+| 01  | Done   | Done   |
 | 02  |        |        |
 | 03  |        |        |
 | 04  |        |        |
