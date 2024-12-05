@@ -51,6 +51,23 @@ foreach my $update_str (@update_strs) {
 	say $update_str;
 	my @pages = split "," , $update_str;
 
+	if( &orderly( @pages ) ) {
+		my $index = $#pages / 2;
+		$middles += $pages[$index];
+	}
+}
+
+
+# if the order of pages is correct, take the middle page number and then add all of these together.
+
+exit( 0 );
+
+sub orderly {
+	my @pages = @_;
+	my $is_orderly = 0;
+
+
+
 	# oh, if page num is needed, it must preceed it dep.
 
 	# $pages[0], it must be before the other pages in the rules.
@@ -72,9 +89,5 @@ foreach my $update_str (@update_strs) {
 		}
 	}
 
+	return $is_orderly;
 }
-
-
-# if the order of pages is correct, take the middle page number and then add all of these together.
-
-exit( 0 );
