@@ -38,7 +38,7 @@ foreach my $line ( @dat ) {
 
 # this is the baseline
 &plot_path( $guard_start_x, $guard_start_y );
-&print_map( @matrix );
+#&print_map( @matrix );
 
 # @matrix contains the complete path then.  So, for every identified
 # location that is in the count, place a blocker and see what happens,
@@ -62,23 +62,26 @@ foreach my $line ( @dat ) {
 
 my @path = &get_path;
 
-print join("\n", @path) . "\n";
+#print join("\n", @path) . "\n";
 
 foreach my $step (@path) {
 	my( $step_x, $step_y ) = split( " x ", $step );
 	my $tmp;
+#	say "resetting map";
 	&reset_map;
 
+#	say "placing O at $step_x x $step_y";
 	$matrix[$step_y][$step_x] = "O";
 
-	say "testing $step_x $step_y";
+#	&print_map( @matrix );
+#	say "testing $step_x $step_y";
 	$direction = "N";
 	my $looper = &plot_path( $guard_start_x, $guard_start_y );
 
-	&print_map( @matrix );
+#	&print_map( @matrix );
 
 	if( $looper ) {
-		say "looper: $step";
+#		say "looper: $step";
 		$count++;
 	}
 }
@@ -95,113 +98,90 @@ sub print_map {
 		}
 		print "\n";
 	}
-	print "\n";
 }
 
 sub plot_path {
 	my( $origin_x, $origin_y ) = @_;
-	my $escaped = 0;
-	my $potential_looped = 0;
-	my $looped = 0;
 	my $x = $origin_x;
 	my $y = $origin_y;
 
+	my $escaped = 0;
+	my $looped = 0;
+
+	my %again;
+
 	while( ! $escaped && ! $looped ) {
-		#	say "direction: $direction";
-		if( $direction eq "N" ) {
-			if( ($y-1) < 0 ) {
-				$escaped = 1;
-			} else {
-				if( $matrix[$y-1][$x] eq "O" ) {
-					if( $potential_looped ) {
-						say "potential";
-						$looped =  1;
-					} else {
-						$potential_looped = 1;
+		my $place = "$direction $x $y";
+		if( $again{$place} ) {
+			# so fuck, is this where a loop is detected?
+# 			say "loop detected $place";
+			$looped = 1;
+			last;
+		} else {
+			$again{$place} = 1;
+
+			if( $direction eq "N" ) {
+				if( ($y-1) < 0 ) {
+					$escaped = 1;
+				} else {
+					if( $matrix[$y-1][$x] eq "#" || $matrix[$y-1][$x] eq "O" ) {
 						$direction = "E";
 						$matrix[$y][$x] = "+";
-					}
-				} elsif( $matrix[$y-1][$x] eq "#" ) {
-					$direction = "E";
-					$matrix[$y][$x] = "+";
-				} else {
-					$y -= 1;
-					if( $matrix[$y][$x] eq '-' ) {
-						$matrix[$y][$x] = "+";
 					} else {
-						$matrix[$y][$x] = "|";
+						$y -= 1;
+						if( $matrix[$y][$x] eq '-' ) {
+							$matrix[$y][$x] = "+";
+						} else {
+							$matrix[$y][$x] = "|";
+						}
 					}
 				}
-			}
-		} elsif( $direction eq "E" ) {
-			if( ($x+1) >= $width ) {
-				$escaped = 1;
-			} else {
-				if( $matrix[$y-1][$x] eq "O" ) {
-					if( $potential_looped ) {
-						$looped =  1;
-					} else {
-						$potential_looped = 1;
+			} elsif( $direction eq "E" ) {
+				if( ($x+1) >= $width ) {
+					$escaped = 1;
+				} else {
+					if( $matrix[$y][$x+1] eq "#" || $matrix[$y][$x+1] eq "O" ) {
 						$direction = "S";
 						$matrix[$y][$x] = "+";
-					}
-				} elsif( $matrix[$y][$x+1] eq "#" ) {
-					$direction = "S";
-					$matrix[$y][$x] = "+";
-				} else {
-					$x += 1;
-					if( $matrix[$y][$x] eq '|' ) {
-						$matrix[$y][$x] = "+";
 					} else {
-						$matrix[$y][$x] = "-";
+						$x += 1;
+						if( $matrix[$y][$x] eq '|' ) {
+							$matrix[$y][$x] = "+";
+						} else {
+							$matrix[$y][$x] = "-";
+						}
 					}
 				}
-			}
-		} elsif( $direction eq "S" ) {
-			if( ($y+1) >= $height ) {
-				$escaped = 1;
-			} else {
-				if( $matrix[$y-1][$x] eq "O" ) {
-					if( $potential_looped ) {
-						$looped =  1;
-					} else {
-						$potential_looped = 1;
+			} elsif( $direction eq "S" ) {
+				if( ($y+1) >= $height ) {
+					$escaped = 1;
+				} else {
+					if( $matrix[$y+1][$x] eq "#" || $matrix[$y+1][$x] eq "O" ) {
 						$direction = "W";
 						$matrix[$y][$x] = "+";
-					}
-				} elsif( $matrix[$y+1][$x] eq "#" ) {
-					$direction = "W";
-					$matrix[$y][$x] = "+";
-				} else {
-					$y += 1;
-					if( $matrix[$y][$x] eq '-' ) {
-						$matrix[$y][$x] = "+";
 					} else {
-						$matrix[$y][$x] = "|";
+						$y += 1;
+						if( $matrix[$y][$x] eq '-' ) {
+							$matrix[$y][$x] = "+";
+						} else {
+							$matrix[$y][$x] = "|";
+						}
 					}
 				}
-			}
-		} elsif( $direction eq "W" ) {
-			if( ($x-1) < 0 ) {
-				$escaped = 1;
-			} else {
-				if( $matrix[$y-1][$x] eq "O" ) {
-					if( $potential_looped ) {
-						$looped =  1;
-					} else {
-						$potential_looped = 1;
+			} elsif( $direction eq "W" ) {
+				if( ($x-1) < 0 ) {
+					$escaped = 1;
+				} else {
+					if( $matrix[$y][$x-1] eq "#" || $matrix[$y][$x-1] eq "O" ) {
 						$direction = "N";
 						$matrix[$y][$x] = "+";
-					}
-				} elsif( $matrix[$y][$x-1] eq "#" ) {
-					$direction = "N";
-					$matrix[$y][$x] = "+";
-				} else {
-					$x -= 1;
-					if( $matrix[$y][$x] eq '|' ) {
-						$matrix[$y][$x] = "+";
 					} else {
-						$matrix[$y][$x] = "-";
+						$x -= 1;
+						if( $matrix[$y][$x] eq '|' ) {
+							$matrix[$y][$x] = "+";
+						} else {
+							$matrix[$y][$x] = "-";
+						}
 					}
 				}
 			}
@@ -219,19 +199,10 @@ sub get_path {
 			push( @path, "$j x $i" ) if $matrix[$i][$j] eq "-";
 			push( @path, "$j x $i" ) if $matrix[$i][$j] eq "+";
 			push( @path, "$j x $i" ) if $matrix[$i][$j] eq "|";
+			push( @path, "$j x $i" ) if $matrix[$i][$j] eq "^";
 		}
 	}
 	return @path;
-}
-
-sub calc_path {
-	my $steps;
-	for ( my $i = 0; $i < $height; $i++ ) {
-		for( my $j = 0; $j < $width; $j++ ) {
-			$steps++ if $matrix[$i][$j] eq "X";
-		}
-	}
-	return $steps;
 }
 
 sub reset_map {
