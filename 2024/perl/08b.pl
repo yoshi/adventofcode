@@ -51,27 +51,30 @@ foreach my $k (sort keys %antennas) {
 		my( $a, $b ) = @ant_locs;
 		say( "a: $a b: $b" );
 
-		push( @antinodes, &ant_nodes( $a, $b ) );
+		push( @antinodes, &resonant_ant_nodes( $a, $b ) );
 	} elsif( scalar( @ant_locs ) == 3 ) {
 		my( $a, $b, $c ) = @ant_locs;
 		say( "a: $a b: $b c: $c" );
 
-		push( @antinodes, &ant_nodes( $a, $b ) );
-		push( @antinodes, &ant_nodes( $b, $c ) );
-		push( @antinodes, &ant_nodes( $a, $c ) );
+		push( @antinodes, &resonant_ant_nodes( $a, $b ) );
+		push( @antinodes, &resonant_ant_nodes( $b, $c ) );
+		push( @antinodes, &resonant_ant_nodes( $a, $c ) );
 	} elsif( scalar( @ant_locs ) == 4 ) {
 		# 4 = 12 (n = 3n) AB BC AC AD BD CD
 		my( $a, $b, $c, $d ) = @ant_locs;
 		say( "a: $a b: $b c: $c d: $d" );
 
-		push( @antinodes, &ant_nodes( $a, $b ) );
-		push( @antinodes, &ant_nodes( $b, $c ) );
-		push( @antinodes, &ant_nodes( $a, $c ) );
-		push( @antinodes, &ant_nodes( $a, $d ) );
-		push( @antinodes, &ant_nodes( $b, $d ) );
-		push( @antinodes, &ant_nodes( $c, $d ) );
+		push( @antinodes, &resonant_ant_nodes( $a, $b ) );
+		push( @antinodes, &resonant_ant_nodes( $b, $c ) );
+		push( @antinodes, &resonant_ant_nodes( $a, $c ) );
+		push( @antinodes, &resonant_ant_nodes( $a, $d ) );
+		push( @antinodes, &resonant_ant_nodes( $b, $d ) );
+		push( @antinodes, &resonant_ant_nodes( $c, $d ) );
 	}
 }
+
+# add all the ants to the nodes
+push @antinodes, keys %ants;
 
 # this is to mask nodes that have antennas that are co-located.
 #my %node_uh;
@@ -120,6 +123,58 @@ sub ant_nodes {
 	# p1: 1x1 p2: 2x2
 	# slope: -1 -1
 	# n1 (p1+m): 0x0 (p2-m)n2: 3x3
+}
+
+sub resonant_ant_nodes {
+	my( $p1, $p2 ) = @_;
+	my( $mx, $my ) = &slope( $p1, $p2 );
+	my @nodes;
+
+	my( $p1x, $p1y ) = split( "x", $p1 );
+	my( $p2x, $p2y ) = split( "x", $p2 );
+
+	$mx = $p1x - $p2x;
+	$my = $p1y - $p2y;
+
+	# create nodes from p1 to p2 out
+
+	my $bound = 1;
+	my $the_x = $p1x;
+	my $the_y = $p1y;
+
+	while( $bound ) {
+		my $next_x = $the_x + $mx;
+		my $next_y = $the_y + $my;
+
+		if( $next_x >= 0 && $next_y >= 0 && $next_x < $width && $next_y < $height ) {
+			push( @nodes, join( "x", $next_x, $next_y ) );
+			$the_x = $next_x;
+			$the_y = $next_y;
+		} else {
+			$bound = 0;
+		}
+	}
+
+	$bound = 1;
+	$the_x = $p2x;
+	$the_y = $p2y;
+
+	while( $bound ) {
+		my $next_x = $the_x - $mx;
+		my $next_y = $the_y - $my;
+
+		if( $next_x >= 0 && $next_y >= 0 && $next_x < $width && $next_y < $height ) {
+			push( @nodes, join( "x", $next_x, $next_y ) );
+			$the_x = $next_x;
+			$the_y = $next_y;
+		} else {
+			$bound = 0;
+		}
+	}
+
+	say "p1: $p1 p2: $p2 nodes: " . join( " ", @nodes );
+
+	return @nodes;
 }
 
 sub is_in_box {
