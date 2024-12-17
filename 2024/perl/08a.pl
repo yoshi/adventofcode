@@ -28,95 +28,96 @@ foreach my $line ( @dat ) {
 	$height++;
 }
 
-my $maxnodes = 0;
+say "width: $width height: $height";
+
+my @antinodes;
 
 foreach my $k (sort keys %antennas) {
 	my $ant_count = scalar( @{$antennas{$k}} );
-	say "$k: $ant_count";
-	$maxnodes += 2 * ($ant_count * ($ant_count - 1));
+
+	say "$k: " . join(",", @{$antennas{$k}});
+
+	# actually, this is dumb.
+	#$maxnodes += 2 * ($ant_count * ($ant_count - 1));
+
+	# create nodes for every line segment.  but only count them if
+	# they do not exist as an antenna or another node.  so just create
+	# them, i suppose.
 
 	# subtract the number of nodes that are out of bounds
-	my @ant_locs = @{$antennas{$k}};
 
+	my @ant_locs = @{$antennas{$k}};
 	if( scalar( @ant_locs ) == 2 ) {
 		my ( $a, $b ) = @ant_locs;
 		say( "a: $a b: $b" );
 
-		my ($ab_mx, $ab_my) = &slope( $a, $b );
-		say( "ab_mx: $ab_mx ab_my: $ab_my" );
-
-		$maxnodes-- if( ! &is_in_box( $a, $ab_mx, $ab_my));
-		$maxnodes-- if( ! &is_in_box( $b, $ab_mx, $ab_my));
+		push( @antinodes, &ant_nodes( $a, $b ) );
 	} elsif( scalar( @ant_locs ) == 3 ) {
 		my ( $a, $b, $c ) = @ant_locs;
 		say( "a: $a b: $b c: $c" );
 
-		my( $ab_mx, $ab_my ) = &slope($a, $b);
-		my( $bc_mx, $bc_my ) = &slope($b, $c);
-		my( $ca_mx, $ca_my ) = &slope($c, $a);
-
-		say( "ab_mx: $ab_mx ab_my: $ab_my" );
-		$maxnodes-- if( ! &is_in_box( $a, $ab_mx, $ab_my));
-		$maxnodes-- if( ! &is_in_box( $b, $ab_mx, $ab_my));
-
-		say( "bc_mx: $bc_mx bc_my: $bc_my" );
-		$maxnodes-- if( ! &is_in_box( $b, $bc_mx, $bc_my));
-		$maxnodes-- if( ! &is_in_box( $c, $bc_mx, $bc_my));
-
-		say( "ca_mx: $ca_mx ca_my: $ca_my" );
-		$maxnodes-- if( ! &is_in_box( $c, $ca_mx, $ca_my));
-		$maxnodes-- if( ! &is_in_box( $a, $ca_mx, $ca_my));
+		push( @antinodes, &ant_nodes( $a, $b ) );
+		push( @antinodes, &ant_nodes( $b, $c ) );
+		push( @antinodes, &ant_nodes( $a, $c ) );
 	} elsif( scalar( @ant_locs ) == 4 ) {
 		# 4 = 12 (n = 3n) AB BC AC AD BD CD
-		
 		my ( $a, $b, $c, $d ) = @ant_locs;
 		say( "a: $a b: $b c: $c d: $d" );
 
-		my( $ab_mx, $ab_my ) = &slope($a, $b);
-		my( $bc_mx, $bc_my ) = &slope($b, $c);
-		my( $ca_mx, $ca_my ) = &slope($c, $a);
-		my( $ad_mx, $ad_my ) = &slope($a, $d);
-		my( $bd_mx, $bd_my ) = &slope($b, $d);
-		my( $cd_mx, $cd_my ) = &slope($c, $d);
-
-		say( "ab_mx: $ab_mx ab_my: $ab_my" );
-		$maxnodes-- if( ! &is_in_box( $a, $ab_mx, $ab_my));
-		$maxnodes-- if( ! &is_in_box( $b, $ab_mx, $ab_my));
-
-		say( "bc_mx: $bc_mx bc_my: $bc_my" );
-		$maxnodes-- if( ! &is_in_box( $b, $bc_mx, $bc_my));
-		$maxnodes-- if( ! &is_in_box( $c, $bc_mx, $bc_my));
-
-		say( "ca_mx: $ca_mx ca_my: $ca_my" );
-		$maxnodes-- if( ! &is_in_box( $c, $ca_mx, $ca_my));
-		$maxnodes-- if( ! &is_in_box( $a, $ca_mx, $ca_my));
-
-		say( "ad_mx: $ad_mx ad_my: $ad_my" );
-		$maxnodes-- if( ! &is_in_box( $a, $ad_mx, $ad_my));
-		$maxnodes-- if( ! &is_in_box( $d, $ad_mx, $ad_my));
-
-		say( "bd_mx: $bd_mx bd_my: $bd_my" );
-		$maxnodes-- if( ! &is_in_box( $b, $bd_mx, $bd_my));
-		$maxnodes-- if( ! &is_in_box( $d, $bd_mx, $bd_my));
-
-		say( "cd_mx: $cd_mx cd_my: $cd_my" );
-		$maxnodes-- if( ! &is_in_box( $c, $cd_mx, $cd_my));
-		$maxnodes-- if( ! &is_in_box( $d, $cd_mx, $cd_my));
+		push( @antinodes, &ant_nodes( $a, $b ) );
+		push( @antinodes, &ant_nodes( $b, $c ) );
+		push( @antinodes, &ant_nodes( $a, $c ) );
+		push( @antinodes, &ant_nodes( $a, $d ) );
+		push( @antinodes, &ant_nodes( $b, $d ) );
+		push( @antinodes, &ant_nodes( $c, $d ) );
 	}
 
 }
 
-say "maxnodes: $maxnodes";
+my %node_uh;
 
-say "box - width: $width height: $height";
-
-say "count: $count";
-
-foreach my $a (sort keys %antennas) {
-	say "$a " . join(",", @{$antennas{$a}});
+foreach my $an (@antinodes) {
+	$node_uh{$an} = 1 if( ! defined( $ants{$an} ) );
 }
 
+say "count: " . scalar( keys( %node_uh ) );
+
 exit( 0 );
+
+sub ant_nodes {
+	my( $p1, $p2 ) = @_;
+	my( $mx, $my ) = &slope( $p1, $p2 );
+	my @nodes;
+
+	my( $p1x, $p1y ) = split( "x", $p1 );
+	my( $p2x, $p2y ) = split( "x", $p2 );
+
+	$mx = $p1x - $p2x;
+	$my = $p1y - $p2y;
+
+	my( $n1x, $n1y, $n2x, $n2y, $n1, $n2 );
+	$n1x = $p1x + $mx;
+	$n1y = $p1y + $my;
+
+	$n2x = $p2x - $mx;
+	$n2y = $p2y - $my;
+
+	if( $n1x >= 0 && $n1y >= 0 && $n1x < $width && $n1y < $height ) {
+		push( @nodes, join( "x", $n1x, $n1y ) );
+	}
+
+	if( $n2x >= 0 && $n2y >= 0 && $n2x < $width && $n2y < $height ) {
+		push( @nodes, join( "x", $n2x, $n2y ) );
+	}
+
+	say "p1: $p1 p2: $p2 nodes: " . join( " ", @nodes );
+
+	return @nodes;
+
+	# p1: 1x1 p2: 2x2
+	# slope: -1 -1
+	# n1 (p1+m): 0x0 (p2-m)n2: 3x3
+}
 
 sub is_in_box {
 	my( $p, $mx, $my ) = @_;
