@@ -7,6 +7,7 @@ my @blocks;
 #my $checksum = 0;
 my @free_blocks;
 my @alloc_blocks;
+my @file_lengths;
 
 chomp( my @dat = <> );
 
@@ -14,7 +15,8 @@ chomp( my @dat = <> );
 
 &decode_map( $dat[0] );
 
-&defrag;
+#&defrag_blocks;
+&defrag_files;
 
 say &calc_checksum;
 
@@ -54,6 +56,7 @@ sub decode_map {
 	
 	foreach my $b ( split( //, $map ) ) {
 		if( $writing ) {
+			$file_lengths[$file_id] = $b
 			for( my $i = 0; $i < $b; $i++ ) {
 #				say $pos . " contains " . $file_id;
 				push @alloc_blocks, $pos;
@@ -72,7 +75,7 @@ sub decode_map {
 	}
 }
 
-sub defrag {
+sub defrag_blocks {
 #	&block_chart;
 	# for( my $i = $#blocks; $i > 0; $i-- ) {
 	# 	last if $#free_blocks == 0;
@@ -95,6 +98,11 @@ sub defrag {
 		}
 #		&block_chart;
 	}
+}
+
+sub defrag_files {
+	&block_chart;
+	&block_chart;
 }
 
 sub block_chart {
