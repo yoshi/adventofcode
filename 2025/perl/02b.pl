@@ -6,6 +6,9 @@ use warnings;
 chomp( my @dat = <> );
 
 my $result = 0;
+my $evals = 0;
+my $fold_evals = 0;
+my $good_folds = 0;
 
 foreach my $line ( @dat ) {
 	my (@ranges) = split /,/, $line;
@@ -14,6 +17,7 @@ foreach my $line ( @dat ) {
 		my( $start, $end ) = split /-/, $range;
 
 		for( my $id = $start; $id <= $end; $id++ ) {
+			$evals++;
 #			next if( length( $id ) % 2 != 0 );
 			if( &nfolds($id) ) {
 #				print qq($id nfolds\n);
@@ -23,6 +27,9 @@ foreach my $line ( @dat ) {
 	}
 }
 
+print qq(evals: $evals\n);
+print qq(fold_evals: $fold_evals\n);
+print qq(good_folds: $good_folds\n);
 print qq(result: $result\n);
 
 exit( 0 );
@@ -37,11 +44,29 @@ sub bifolds() {
 	}
 }
 
+sub contains_singles {
+	my( $id ) = @_;
+	my @digs = split("", $id);
+	my %dh;
+
+	foreach my $dig (@digs) {
+		$dh{$dig}++;
+	}
+
+	foreach my $dv (sort values %dh) {
+		return 1 if $dv == 1;
+	}
+
+	return 0;
+}
+
 sub nfolds() {
 	my( $id ) = @_;
 	my( $len ) = length( $id );
 
-	for( my $nlen = 1; $nlen <= $len / 2; $nlen ++ ) {
+	return 0 if( &contains_singles($id));
+
+	for( my $nlen = int($len / 2); $nlen > 0; $nlen -- ) {
 		if( $len % $nlen == 0 ) {
 #			print "id: $id nlen: $nlen: ";
 			my( @segments ) = ($id =~ /(\d{$nlen})/g);
@@ -51,7 +76,9 @@ sub nfolds() {
 #				push @segments, $segment;
 #				print qq(segment: $segment\n);
 
+			$fold_evals ++;
 			if( &multieq(@segments) ) {
+				$good_folds++;
 				return 1;
 			}
 		}
